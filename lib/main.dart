@@ -31,18 +31,34 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.orange,
           title: const Text('Flutter Basic App'), // Judul di AppBar
         ),
-        body: Column(
-          children: [
-            Center(
-              child: TextButton(
+        body: Container(
+          padding: const EdgeInsets.only(top: 50),
+          child: Center(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Pusatkan horizontal
+              children: [
+                Image.asset(
+                  'assets/images/tes.webp',
+                  width: 100,
+                  fit: BoxFit.cover,
+                ),
+                const Text(
+                  'Hello my name is pikacu.',
+                  style: TextStyle(fontSize: 18, fontFamily: 'Roboto'),
+                ),
+                TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/about');
                   },
-                  child: const Text('data')),
-            )
-          ],
+                  child: const Text('Go to About'),
+                ),
+              ],
+            ),
+          ),
         ));
   }
 }
@@ -57,15 +73,22 @@ class AboutPAge extends StatelessWidget {
         title: const Text('About Page'),
       ),
       body: Container(
-        padding: const EdgeInsets.all(23),
-        child: Column(
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('data'),
-            TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/about');
-                },
-                child: const Text('data'))
+            Text(
+              'About',
+              style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline),
+            ),
+            SizedBox(
+                width: 200,
+                child: Text(
+                  'this aplication built progress with flutter BY EKoramdani',
+                ))
           ],
         ),
       ),
