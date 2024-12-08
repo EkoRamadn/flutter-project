@@ -9,88 +9,125 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Basic App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/about': (context) => const AboutPAge(),
-      },
+    return const MaterialApp(
+      home: HomePage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: const Text('Flutter Basic App'), // Judul di AppBar
-        ),
-        body: Container(
-          padding: const EdgeInsets.only(top: 50),
-          child: Center(
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Pusatkan horizontal
-              children: [
-                Image.asset(
-                  'assets/images/tes.webp',
-                  width: 100,
-                  fit: BoxFit.cover,
-                ),
-                const Text(
-                  'Hello my name is pikacu.',
-                  style: TextStyle(fontSize: 18, fontFamily: 'Roboto'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/about');
-                  },
-                  child: const Text('Go to About'),
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class AboutPAge extends StatelessWidget {
-  const AboutPAge({super.key});
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  final PageController _pageController = PageController();
+
+  // Fungsi untuk mengubah halaman berdasarkan pilihan dari BottomNavigationBar
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Menggunakan jumpToPage untuk menghilangkan animasi geser
+    _pageController.jumpToPage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Page'),
+        title: const Text('Bottom Navigation without Swipe Animation'),
       ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'About',
-              style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline),
-            ),
-            SizedBox(
-                width: 200,
-                child: Text(
-                  'this aplication built progress with flutter BY EKoramdani',
-                ))
-          ],
-        ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        children: const [
+          FirstPage(),
+          SecondPage(),
+          ThirdPage(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped, // Menangani tap pada bottom navigation
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.black,
+        backgroundColor: Colors.blue,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: _buildIcon(Icons.home, 0),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildIcon(Icons.search, 1),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildIcon(Icons.account_circle, 2),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Fungsi untuk membangun ikon dengan latar belakang abu-abu saat aktif
+  Widget _buildIcon(IconData icon, int index) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: _selectedIndex == index ? Colors.grey : Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(icon),
+    );
+  }
+}
+
+class FirstPage extends StatelessWidget {
+  const FirstPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'This is the Home page',
+        style: TextStyle(fontSize: 24),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'This is the Search page',
+        style: TextStyle(fontSize: 24),
+      ),
+    );
+  }
+}
+
+class ThirdPage extends StatelessWidget {
+  const ThirdPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'This is the Profile page',
+        style: TextStyle(fontSize: 24),
       ),
     );
   }
