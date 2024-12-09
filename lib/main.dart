@@ -197,14 +197,38 @@ class FirstPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(5),
-                    width: 80,
+                    padding:
+                        const EdgeInsets.all(1), // Padding di sekitar kontainer
+                    width: 90, // Lebar kontainer
                     decoration: BoxDecoration(
-                        border: Border.all(width: 3, color: Colors.black),
-                        borderRadius: BorderRadius.circular(4)),
-                    child: const Text(
-                      ' Register',
-                      textAlign: TextAlign.center,
+                      border: Border.all(
+                          width: 2, color: Colors.black), // Border lebih tipis
+                      borderRadius: BorderRadius.circular(
+                          8), // Membuat sudut lebih membulat
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        // Aksi ketika tombol ditekan
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Register(),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10), // Padding vertikal lebih besar
+
+                        textStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16), // Gaya teks lebih tebal dan besar
+                      ),
+                      child: const Text(
+                        'Register',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
                   Container(
@@ -352,6 +376,130 @@ class _SimpleFormExampleState extends State<SimpleFormExample> {
               ElevatedButton(
                 onPressed: _submitForm,
                 child: const Text("Submit"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Register extends StatefulWidget {
+  const Register({super.key});
+
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  // Controller untuk masing-masing input form
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  // Global key untuk form
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey, // Menentukan key untuk form
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Input Nama
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Input Email
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  } else if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
+                      .hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Input Password
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true, // Untuk menyembunyikan password
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  } else if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Tombol Submit
+              SizedBox(
+                width: double.infinity, // Agar tombol memenuhi lebar layar
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Menampilkan pop-up dialog dengan hasil input
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Registration Details'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Name: ${_nameController.text}'),
+                                Text('Email: ${_emailController.text}'),
+                                Text('Password: ${_passwordController.text}'),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: const Text('Register'),
+                ),
               ),
             ],
           ),
